@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastery LMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .animate-pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .8; } }
+        /* Style for the Certificate font */
+        .cert-title {
+            font-family: 'Dancing Script', cursive;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+<nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <% if (locals.user) { %>
+            <% if (locals.user.role === 'Instructor') { %>
+                 <a href="/instructor/dashboard" class="flex items-center gap-2 text-2xl font-extrabold text-emerald-600 tracking-tight hover:text-emerald-800 transition">
+                    <i class="fa-solid fa-graduation-cap"></i> LMS
+                </a>
+            <% } else { %>
+            
+                    <a href="/" class="flex items-center gap-2 text-2xl font-extrabold text-emerald-600 tracking-tight hover:text-emerald-800 transition">
+                    <i class="fa-solid fa-graduation-cap"></i> LMS
+                    </a>
+            
+           <% } %>
+        <% } else { %>
+                <a href="/" class="flex items-center gap-2 text-2xl font-extrabold text-green-600 tracking-tight hover:text-emerald-800 transition">
+            <i class="fa-solid fa-graduation-cap"></i> LMS
+        </a>
+        
+        <% } %>
+
+
+
+<div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">         
+    <% if (locals.user) { %>
+        <% if (locals.user.role === 'Learner') { %>
+            <a href="/" class="<%= (locals.path === '/') ? 'text-emerald-600 border-b-2 border-emerald-600' : 'hover:text-emerald-600' %> transition pb-1">Home</a>
+            <a href="/learner/dashboard" class="<%= (locals.path && locals.path.startsWith('/learner/dashboard')) ? 'text-emerald-600 border-b-2 border-emerald-600' : 'hover:text-emerald-600' %> transition pb-1">Browse</a>
+            <a href="/learner/my-course" class="<%= (locals.path === '/learner/my-course') ? 'text-emerald-600 border-b-2 border-emerald-600' : 'hover:text-emerald-600' %> transition pb-1">My Learning</a>
+            <a href="/learner/balance" class="<%= (locals.path === '/learner/balance') ? 'text-emerald-600 border-b-2 border-emerald-600' : 'hover:text-emerald-600' %> transition pb-1">Wallet</a>
+            
+        <% } else if (locals.user.role === 'Instructor') { %>
+            <a href="/instructor/dashboard" class="<%= (locals.path === '/instructor/dashboard') ? 'text-emerald-600 border-b-2 border-emerald-600' : 'hover:text-emerald-600' %> transition pb-1">Instructor Dashboard</a>
+            <a href="/instructor/upload" class="<%= (locals.path === '/instructor/upload') ? 'text-emerald-600 border-b-2 border-emerald-600' : 'hover:text-emerald-600' %> transition pb-1">Create Course</a>
+            <a href="/instructor/balance" class="<%= (locals.path === '/instructor/balance') ? 'text-emerald-600 border-b-2 border-emerald-600' : 'hover:text-emerald-600' %> transition pb-1">Earnings</a>
+            <a href="/instructor/lms-balance" class="<%= (locals.path === '/instructor/lms-balance') ? 'text-emerald-600 border-b-2 border-emerald-600' : 'hover:text-emerald-600' %> transition pb-1">LMS Revenue</a>
+        <% } %>
+
+        <div class="border-l pl-6 ml-2 flex items-center gap-6">
+            <div class="flex items-center gap-3 group cursor-pointer">
+                <div class="flex flex-col items-end">
+                    <span class="text-sm font-bold text-gray-700"><%= locals.user.name %></span>
+                    <span class="text-[9px] text-yellow-500 uppercase tracking-wider font-bold"><%= locals.user.role %></span>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-md">
+                    <i class="fa-solid fa-user text-sm"></i>
+                </div>
+            </div>
+            <a href="/logout" class="text-red-500 hover:text-red-700 transition text-sm font-bold flex items-center gap-1">
+                <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+            </a>
+        </div>
+
+    <% } else { %>
+        <a href="/" class="<%= (locals.path === '/') ? 'text-emerald-600 border-b-2 border-emerald-600' : 'hover:text-emerald-600' %> transition pb-1">Home</a>
+        <a href="/login" class="bg-green-600 text-white px-5 py-2.5 rounded-full hover:bg-green-700 transition shadow-lg">Log In</a>
+    <% } %>
+</div>
+    </div>
+</nav> 
+
+<div class="container mx-auto px-6 py-8 flex-grow">

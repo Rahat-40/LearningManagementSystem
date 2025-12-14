@@ -1,0 +1,7 @@
+node_modules/
+LMS/node_modules/
+BANK/node_modules/
+
+LMS/.env
+
+LMS/public/uploads/*

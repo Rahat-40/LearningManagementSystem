@@ -1,0 +1,31 @@
+<%- include("../partials/header") %>
+<%- include("../partials/alerts") %>
+<h1 class="text-4xl font-extrabold mb-8 text-gray-800 border-b pb-2">👋 Instructor Dashboard</h1>
+
+<div class="flex space-x-4 mb-8">
+    <a href="/instructor/upload" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-150 shadow-lg text-lg font-semibold transform hover:scale-[1.02] active:scale-95">
+        <i class="fa-solid fa-upload mr-2"></i> Upload New Course
+    </a>
+    <a href="/instructor/balance" class="inline-block bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition duration-150 shadow-lg text-lg font-semibold transform hover:scale-[1.02] active:scale-95">
+        <i class="fa-solid fa-money-check-dollar mr-2"></i> Check Earnings
+    </a>
+</div>
+
+<h2 class="text-3xl font-bold mb-6 text-gray-700 border-b pb-2">My Uploaded Courses (<%= courses.length %>)</h2>
+<% if (courses.length === 0) { %>
+    <div class="text-center p-10 bg-white rounded-lg shadow-xl border border-gray-200">
+        <p class="text-xl text-gray-500">You have not uploaded any courses yet.</p>
+        <a href="/instructor/upload" class="mt-6 inline-block text-blue-600 font-semibold hover:underline">Start your first course upload here!</a>
+    </div>
+<% } else { %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <% courses.forEach(course => { %>
+            <div class="bg-white p-6 shadow-xl rounded-xl border border-gray-200 hover:shadow-2xl transition duration-300">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2"><%= course.title %></h2>
+                <p class="text-gray-600 mb-4 line-clamp-3"><%= course.description %></p>
+                <p class="text-xl font-bold text-green-600">Price: Tk <%= course.price %></p>
+            </div>
+        <% }) %>
+    </div>
+<% } %>
+<%- include("../partials/footer") %>

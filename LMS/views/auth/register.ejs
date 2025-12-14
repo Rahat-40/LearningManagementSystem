@@ -1,0 +1,24 @@
+<%- include("../partials/header") %>
+<%- include("../partials/alerts") %>
+<div class="max-w-lg mx-auto bg-white p-8 rounded-xl shadow-2xl border-t-4 border-green-500">
+  <h2 class="text-3xl font-bold mb-6 text-center text-green-700">Create Account</h2>
+  <form action="/register" method="POST" class="space-y-5">
+    <input type="text" name="name" placeholder="Full Name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500" required>
+    <input type="email" name="email" placeholder="Email Address" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500" required>
+    <input type="password" name="password" placeholder="Password (min 6 characters)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500" required>
+    
+    <div class="space-y-2 pt-2">
+        <label class="block text-gray-700 font-medium">Select Your Role:</label>
+        <select name="role" class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-green-500 focus:border-green-500" required>
+          <option value="Learner">Learner (Want to buy courses)</option>
+          <option value="Instructor">Instructor (Want to sell courses)</option>
+        </select>
+    </div>
+
+    <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg font-bold hover:bg-green-700 transition duration-150 shadow-md transform active:scale-95">
+        Register Account
+    </button>
+  </form>
+  <p class="mt-6 text-center text-gray-600">Already have an account? <a href="/login" class="text-emerald-600 font-semibold hover:text-emerald-800">Log In Here</a></p>
+</div>
+<%- include("../partials/footer") %>

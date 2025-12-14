@@ -1,0 +1,26 @@
+<%- include("../partials/header") %>
+<div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-2xl border-l-8 border-red-600">
+  <h2 class="text-3xl font-bold mb-4 text-red-700 flex items-center gap-2">
+    <i class="fa-solid fa-triangle-exclamation"></i> Action Required: Bank Setup
+  </h2>
+  <p class="mb-6 text-gray-600 border-b pb-4">
+    **Welcome!** Before you can buy courses or receive payments, you must link your bank account details. This is required by the e-commerce organization (LMS) for financial transactions.
+  </p>
+  
+  <form action="/setup-bank" method="POST" class="space-y-4">
+    <div class="space-y-2 pt-4">
+        <label class="block text-gray-700 font-medium mb-2">Bank Account Number (Simulated):</label>
+        <input type="text" name="accountNumber" placeholder="Your Bank Account Number" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" required>
+    </div>
+    
+    <div class="space-y-2">
+        <label class="block text-gray-700 font-medium mb-2">Transaction Secret (Simulated PIN):</label>
+        <input type="password" name="secret" placeholder="Your Bank Secret (e.g., '1234')" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" required>
+    </div>
+
+    <button type="submit" class="w-full bg-indigo-600 text-white p-3 rounded-lg font-bold hover:bg-indigo-700 transition duration-150 mt-4 shadow-lg transform active:scale-95">
+        <i class="fa-solid fa-floppy-disk mr-2"></i> Save Bank Details and Continue
+    </button>
+  </form>
+</div>
+<%- include("../partials/footer") %>

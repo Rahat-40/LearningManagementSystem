@@ -1,0 +1,20 @@
+<%- include("../partials/header") %>
+<div class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-2xl text-center border-t-8 border-indigo-500">
+    <h1 class="text-4xl font-extrabold mb-6 text-indigo-700 flex items-center justify-center gap-3"><i class="fa-solid fa-building"></i> LMS Organization Balance</h1>
+    
+    <p class="text-lg text-gray-600 mb-2">LMS Account Number:</p>
+    <p class="text-xl font-mono text-gray-800 bg-gray-100 inline-block px-4 py-2 rounded-lg border border-gray-300 shadow-inner"><%= accountNumber %></p>
+    
+    <div class="mt-8 p-6 border-4 border-green-500 bg-green-50 rounded-xl shadow-inner">
+        <p class="text-2xl font-semibold text-gray-700">Current Commission Balance:</p>
+        <p class="text-7xl font-extrabold text-green-700 mt-2 animate-pulse-slow">
+            Tk <%= balance.toFixed(2) %> 
+        </p>
+    </div>
+    
+    <p class="mt-6 text-sm text-gray-500 italic">This reflects the total commission earned by the platform (20% of all course sales).</p>
+    <% if (locals.user && locals.user.role === 'Instructor') { %>
+        <a href="/instructor/dashboard" class="mt-8 inline-block text-blue-600 font-semibold hover:underline transition duration-150">← Back to Instructor Dashboard</a>
+    <% } %>
+</div>
+<%- include("../partials/footer") %>

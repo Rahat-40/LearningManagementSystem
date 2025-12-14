@@ -1,0 +1,161 @@
+<%- include("../partials/header") %>
+<%- include("../partials/alerts") %>
+<div class="max-w-3xl bg-white p-8 rounded-xl shadow-2xl mx-auto border-t-8 border-green-600">
+  <h2 class="text-3xl font-bold mb-6 text-center text-green-700">Upload New Course</h2>
+  
+  <form id="courseUploadForm" action="/instructor/upload" method="POST" class="space-y-6" enctype="multipart/form-data">
+    
+    <div class="space-y-4 p-4 border rounded-lg bg-gray-50">
+        <h3 class="font-bold text-xl text-gray-700 flex items-center"><i class="fa-solid fa-info-circle mr-3 text-green-500"></i> Course Details</h3>
+        <input type="text" name="title" placeholder="Course Title (e.g., 'Mastering Node.js')" class="w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500" required>
+        <textarea name="description" placeholder="A brief description of the course content." rows="3" class="w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500" required></textarea>
+        <input type="number" name="price" placeholder="Price (Tk)" class="w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500" required>
+    </div>
+
+    <div class="space-y-4 p-4 border rounded-lg bg-gray-50">
+        <h3 class="font-bold text-xl text-gray-700 flex items-center"><i class="fa-solid fa-file-upload mr-3 text-indigo-500"></i> Learning Materials</h3>
+        <p class="text-sm text-gray-500">Upload optional files and provide lecture notes.</p>
+        <textarea name="text" placeholder="Text Content (Lecture Notes)" rows="4" class="w-full p-3 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+        
+        <label class="block text-gray-700">Video File (MP4, etc.):</label>
+        <input type="file" name="videoFile" accept="video/*" class="w-full border p-2 bg-white rounded-lg">
+        
+        <label class="block text-gray-700">PDF Document:</label>
+        <input type="file" name="pdfFile" accept="application/pdf" class="w-full border p-2 bg-white rounded-lg">
+        
+        <label class="block text-gray-700">Audio File (MP3, etc.):</label>
+        <input type="file" name="audioFile" accept="audio/*" class="w-full border p-2 bg-white rounded-lg">
+    </div>
+
+    <div class="space-y-4 p-4 border rounded-lg bg-gray-50">
+        <h3 class="font-bold text-xl text-red-700 flex items-center"><i class="fa-solid fa-clipboard-question mr-3 text-red-500"></i> Quiz Questions (MCQ)</h3>
+        <p class="text-sm text-gray-500">Create the final assessment. The quiz is required for certificate generation.</p>
+        
+        <div id="mcq-container" class="space-y-4">
+        </div>
+
+        <button type="button" id="add-mcq-btn" class="bg-indigo-600 text-white p-3 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition transform active:scale-95">
+            + Add New Question
+        </button>
+        
+        <input type="hidden" name="mcqJson" id="mcqJsonInput">
+    </div>
+
+    <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg font-bold hover:bg-green-700 transition mt-4 shadow-lg transform active:scale-95">
+        <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Upload Course and Go Live
+    </button>
+  </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('mcq-container');
+    const addBtn = document.getElementById('add-mcq-btn');
+    const form = document.getElementById('courseUploadForm');
+    const jsonInput = document.getElementById('mcqJsonInput');
+    let questionCount = 0; // Tracks the number of questions
+
+    // 1. Function to create HTML for a single MCQ
+    const createMcqForm = () => {
+        questionCount++;
+        const index = questionCount; 
+        
+        const mcqDiv = document.createElement('div');
+        mcqDiv.classList.add('p-4', 'border', 'rounded-xl', 'bg-white', 'shadow-md');
+        mcqDiv.dataset.index = index;
+        
+        // Template for a single MCQ block
+        mcqDiv.innerHTML = `
+            <div class="flex justify-between items-center mb-3 border-b pb-2">
+                <h4 class="font-bold text-lg text-gray-800">Question #${index}</h4>
+                <button type="button" class="remove-mcq-btn text-red-500 text-sm hover:text-red-700 font-medium transition">
+                    <i class="fa-solid fa-trash-alt mr-1"></i> Remove
+                </button>
+            </div>
+            <input type="text" name="question-${index}" placeholder="Question text" class="w-full p-2 mb-3 border rounded-lg text-sm focus:ring-blue-500" required>
+            
+            <p class="font-medium text-gray-600 text-sm mb-1">Options (4 max):</p>
+            <div class="space-y-2">
+                <input type="text" name="option-${index}-1" placeholder="Option 1" class="w-full p-2 border rounded-lg text-sm focus:ring-blue-500" required>
+                <input type="text" name="option-${index}-2" placeholder="Option 2" class="w-full p-2 border rounded-lg text-sm focus:ring-blue-500" required>
+                <input type="text" name="option-${index}-3" placeholder="Option 3 (Optional)" class="w-full p-2 border rounded-lg text-sm focus:ring-blue-500">
+                <input type="text" name="option-${index}-4" placeholder="Option 4 (Optional)" class="w-full p-2 border rounded-lg text-sm focus:ring-blue-500">
+            </div>
+            
+            <p class="font-medium text-gray-600 text-sm mt-4 mb-1 border-t pt-3">Correct Answer (Must match the exact text of the correct option):</p>
+            <input type="text" name="correctAnswer-${index}" placeholder="e.g., Option 1 text" class="w-full p-2 border rounded-lg text-sm bg-yellow-50 focus:ring-yellow-500" required>
+        `;
+
+        container.appendChild(mcqDiv);
+        
+        // Attach remove event listener
+        mcqDiv.querySelector('.remove-mcq-btn').addEventListener('click', () => {
+            mcqDiv.remove();
+        });
+    };
+
+    // Add initial question
+    createMcqForm();
+
+    // Attach event listener to "Add Question" button
+    addBtn.addEventListener('click', createMcqForm);
+
+    // 2. Function to serialize the form data into the required JSON structure
+    const serializeMcqData = () => {
+        const mcqs = [];
+        // Select only the visible question blocks for serialization
+        const questionBlocks = container.querySelectorAll('.p-4.border.rounded-xl');
+        
+        questionBlocks.forEach(block => {
+            const index = block.dataset.index;
+            
+            // Query elements by their name attribute
+            const questionInput = block.querySelector(`input[name="question-${index}"]`);
+            const correctInput = block.querySelector(`input[name="correctAnswer-${index}"]`);
+
+            // Use the .value property safely
+            const questionText = questionInput ? questionInput.value.trim() : '';
+            const correctText = correctInput ? correctInput.value.trim() : '';
+            
+            const options = [];
+            // Collect options, only adding non-empty ones
+            for (let i = 1; i <= 4; i++) {
+                const optInput = block.querySelector(`input[name="option-${index}-${i}"]`);
+                if (optInput && optInput.value.trim() !== '') {
+                    options.push(optInput.value.trim());
+                }
+            }
+
+            if (questionText && options.length > 0 && correctText) {
+                // Client-side validation: Check if the correct answer text is one of the provided options
+                if (!options.includes(correctText)) {
+                    alert(`Error in Question #${index}: The correct answer must exactly match one of the provided options.`);
+                    throw new Error("Validation Failed");
+                }
+                
+                mcqs.push({
+                    question: questionText,
+                    options: options,
+                    correctAnswer: correctText
+                });
+            }
+        });
+        
+        // Put the JSON string into the hidden input field
+        jsonInput.value = JSON.stringify(mcqs);
+    };
+
+    // 3. Attach serializer to form submission
+    form.addEventListener('submit', (e) => {
+        try {
+            serializeMcqData();
+            // If serialization succeeds, the form proceeds normally
+        } catch (error) {
+            if (error.message === "Validation Failed") {
+                e.preventDefault(); // Stop form submission on validation error
+            }
+        }
+    });
+});
+</script>
+<%- include("../partials/footer") %>

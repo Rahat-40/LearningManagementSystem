@@ -1,0 +1,35 @@
+<%- include("../partials/header") %>
+<%- include("../partials/alerts") %>
+<h1 class="text-4xl font-extrabold mb-8 text-gray-800 border-b pb-2">📚 All Available Courses</h1>
+
+<% if (courses.length === 0) { %>
+    <div class="text-center p-10 bg-white rounded-lg shadow-xl">
+        <p class="text-xl text-gray-500">No courses have been uploaded yet. Check back soon!</p>
+    </div>
+<% } else { %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <% courses.forEach(course => { %>
+        <div class="bg-white rounded-xl shadow-2xl overflow-hidden hover:shadow-indigo-300/50 transition duration-300 transform hover:-translate-y-1 flex flex-col h-full">
+          <div class="h-40 bg-indigo-500/10 relative flex items-center justify-center">
+            <i class="fa-solid fa-code text-5xl text-emerald-600 opacity-60"></i>
+            <span class="absolute top-3 right-3 bg-yellow-400 text-xs font-bold px-3 py-1 rounded-full uppercase">New</span>
+          </div>
+
+          <div class="p-6 flex-grow flex flex-col justify-between">
+            <div>
+                <h2 class="text-xl font-bold text-gray-800 mb-2 truncate" title="<%= course.title %>"><%= course.title %></h2>
+                <p class="text-gray-500 text-sm line-clamp-3 mb-4"><%= course.description %></p>
+            </div>
+            
+            <div class="mt-4">
+                <p class="text-2xl font-extrabold text-red-600 mb-4">Tk <%= course.price %></p>
+                <a href="/course/<%= course._id %>" class="w-full inline-block text-center bg-emerald-600 text-white px-4 py-2.5 rounded-lg font-semibold hover:bg-emerald-800 transition duration-150 shadow-md transform active:scale-95">
+                    View Details
+                </a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+<% } %>
+<%- include("../partials/footer") %>

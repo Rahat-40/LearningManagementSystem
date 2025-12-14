@@ -1,0 +1,116 @@
+<%- include("../partials/header") %>
+<%- include("../partials/alerts") %>
+
+<div class="relative bg-gradient-to-r from-green-600 to-emerald-700 text-white py-12 lg:py-16 overflow-hidden">
+    <div class="container mx-auto px-6 lg:max-w-6xl">
+        <div class="lg:w-full">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight text-yellow-400"><%= course.title %></h1>
+            <p class="text-lg text-gray-300 mb-6"><%= course.description %></p>
+            
+            <div class="flex flex-wrap items-center gap-6 text-sm text-gray-300">
+                <span class="bg-yellow-400 text-gray-900 px-3 py-1 rounded-full font-bold text-xs">BESTSELLER</span>
+                <span class="flex items-center"><i class="fa-solid fa-globe mr-2"></i> English</span>
+                <span class="flex items-center"><i class="fa-regular fa-calendar mr-2"></i> Last updated <%= new Date().toLocaleDateString() %></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mx-auto px-6 lg:max-w-6xl py-12 relative">
+    <div class="flex flex-col lg:flex-row gap-12">
+        
+        <div class="w-full lg:w-2/3 order-2 lg:order-1">
+            
+            <div class="border border-gray-200 rounded-xl p-6 mb-10 bg-white shadow-lg">
+                <h3 class="text-2xl font-bold text-gray-900 mb-4 flex items-center"><i class="fa-solid fa-chart-line text-green-500 mr-3"></i> What you'll learn</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+                    <div class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i> Comprehensive curriculum coverage</div>
+                    <div class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i> Hands-on  quizzes</div>
+                    <div class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i> Downloadable resources (PDFs)</div>
+                    <div class="flex items-start"><i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i> Certificate of Completion</div>
+                </div>
+            </div>
+
+            <div class="mb-10">
+                <h3 class="text-3xl font-bold text-gray-900 mb-6">Course Content Overview</h3>
+                <div class="space-y-3 border p-4 rounded-xl bg-white shadow-md">
+                    <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-100 transition duration-150 hover:bg-gray-100">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-circle-play text-green-600 text-lg"></i>
+                            <span class="text-gray-700 font-medium">Introduction & Overview Video</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-100 transition duration-150 hover:bg-gray-100">
+                         <div class="flex items-center gap-3"><i class="fa-solid fa-file-pdf text-green-600 text-lg"></i> <span class="text-gray-700 font-medium">Lecture Notes & Resources</span></div>
+                    </div>
+                    <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-100 transition duration-150 hover:bg-gray-100">
+                         <div class="flex items-center gap-3"><i class="fa-solid fa-clipboard-list text-green-600 text-lg"></i> <span class="text-gray-700 font-medium">Final Assessment (MCQ Quiz)</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">Description</h3>
+                <div class="prose max-w-none text-gray-600 leading-relaxed bg-white p-6 rounded-xl shadow-md">
+                    <p><%= course.description %></p>
+                    <p class="mt-4 border-t pt-4 italic text-gray-500">This comprehensive course is designed to take you from beginner to advanced. Whether you are looking to upskill for a new job or just learn for fun, this guided path covers everything you need to master the subject.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full lg:w-1/3 order-1 lg:order-2">
+            <div class="bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden lg:sticky lg:top-24">
+                
+                <div class="aspect-video bg-gray-800 relative group cursor-pointer h-48 flex items-center justify-center">
+                    <i class="fa-solid fa-circle-play text-white text-6xl opacity-80 group-hover:scale-110 transition duration-300"></i>
+                    <div class="absolute bottom-4 w-full text-center text-white font-medium text-sm">Course Preview</div>
+                </div>
+
+                <div class="p-6">
+                    <div class="flex items-end gap-3 mb-6 border-b pb-4">
+                        <span class="text-5xl font-extrabold text-red-500">Tk <%= course.price %></span>
+                    </div>
+
+                    <% if (user) { %>
+                        <% if (user.role === 'Learner') { %>
+                            <% if (locals.isEnrolled) { %>
+                                <a href="/learner/course/<%= course._id %>" class="block w-full text-center bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition shadow-lg mb-4 transform active:scale-95">
+                                    <i class="fa-solid fa-book-open mr-2"></i> Go to Course Dashboard
+                                </a>
+                            <% } else { %>
+                                <form action="/learner/buy/<%= course._id %>" method="POST">
+                                    <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-lg hover:bg-emerald-700 transition shadow-lg mb-4 transform active:scale-95">
+                                        <i class="fa-solid fa-sack-dollar mr-2"></i> Enroll Now
+                                    </button>
+                                </form>
+                            <% } %>
+                        <% } else { %>
+                            <div class="bg-yellow-50 text-yellow-800 text-center py-3 rounded-lg text-sm border border-yellow-200">
+                                <i class="fa-solid fa-exclamation-circle mr-2"></i> Instructors cannot purchase courses.
+                            </div>
+                        <% } %>
+                    <% } else { %>
+                        <div class="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+                            <p class="font-semibold text-green-800 mb-3">Login to purchase this course.</p>
+                            <a href="/login" class="block w-full text-center bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition shadow-lg transform active:scale-95">
+                                <i class="fa-solid fa-sign-in-alt mr-2"></i> Login to Buy
+                            </a>
+                        </div>
+                    <% } %>
+
+                    <div class="space-y-3 mt-6 pt-4 border-t">
+                        <p class="font-bold text-sm text-gray-900">This course includes:</p>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li class="flex items-center"><i class="fa-solid fa-video w-6 text-center mr-2 text-green-600"></i> On-demand video lectures</li>
+                            <li class="flex items-center"><i class="fa-solid fa-file-arrow-down w-6 text-center mr-2 text-green-600"></i> Downloadable resources</li>
+                            <li class="flex items-center"><i class="fa-solid fa-trophy w-6 text-center mr-2 text-green-600"></i> Certificate of completion</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<%- include("../partials/footer") %>
