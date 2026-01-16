@@ -4,7 +4,16 @@ const Account = require("../models/Account");
 
 exports.createAccount = async (req , res ) => {
     try{
-        const {accountNumber,secret,balance} = req.body;
+        let {accountNumber,secret,balance} = req.body;
+        balance = Number(balance) || 0; 
+
+        if (balance < 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Initial balance cannot be negative"
+            });
+        }
+
         const newAccount = await Account.create({accountNumber,secret,balance});
         res.status(201).json({success: true, account: newAccount});
     } catch(err){
@@ -27,7 +36,14 @@ exports.checkBalance = async (req ,res) => {
 // handle debit 
 
 exports.handleTransaction = async (req ,res) => {
-    const {accountNumber,secret,amount} = req.body;
+    let {accountNumber,secret,amount} = req.body;
+
+    amount = Number(amount); 
+
+    if (isNaN(amount) || amount <= 0) {
+        return res.status(400).json({ success: false, message: "Invalid amount" });
+    }
+
     try{
         const account = await Account.findOne({accountNumber});
         if(!account) return res.status(404).json({success:false ,message:"Account not found."});
@@ -45,7 +61,12 @@ exports.handleTransaction = async (req ,res) => {
 //handle deposit
 
 exports.handleDeposit = async (req ,res) =>{
-    const{accountNumber,amount} = req.body;
+    let {accountNumber,amount} = req.body;
+    amount = Number (amount);
+
+    if (isNaN(amount) || amount <= 0) {
+        return res.status(400).json({ success: false, message: "Invalid amount" });
+    }
 
     try{
         const account = await Account.findOne({accountNumber});
@@ -60,8 +81,12 @@ exports.handleDeposit = async (req ,res) =>{
 };
 
 exports.handleTransfer = async (req ,res) => {
-    const { fromAccountNumber, fromSecret, toAccountNumber, amount } = req.body;
+    let { fromAccountNumber, fromSecret, toAccountNumber, amount } = req.body;
+    amount = Number(amount); 
 
+    if (isNaN(amount) || amount <= 0) {
+        return res.status(400).json({ success: false, message: "Invalid amount" });
+    }
     if (fromAccountNumber === toAccountNumber) {
         return res.status(400).json({success: false, message: "Cannot transfer to the same account."});
     }
